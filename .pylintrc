@@ -15,11 +15,11 @@ disable=raw-checker-failed,
         use-symbolic-message-instead,
         missing-module-docstring,
         missing-function-docstring,
-        missing-class-docstring
+        missing-class-docstring,
+	missint-timeout
 
 [FORMAT]
 
-max-module-lines=50
 [REFACTORING]
 
 max-nested-blocks=2
