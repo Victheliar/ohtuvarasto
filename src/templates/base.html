@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Varastosovellus - Hallinnoi varastojasi{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}" class="btn" title="Palaa varastojen listanäkymään">Etusivu</a>
+        <a href="{{ url_for('luo_varasto') }}" class="btn btn-success" title="Luo uusi varasto järjestelmään">+ Luo uusi varasto</a>
+    </nav>
+
+    <h1>{% block header %}Varastosovellus{% endblock %}</h1>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
