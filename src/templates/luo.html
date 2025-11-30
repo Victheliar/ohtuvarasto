@@ -1,23 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Luo uusi varasto - Varastosovellus{% endblock %}
+{% block title %}Luo uusi varasto - Varastonhallinta{% endblock %}
 {% block header %}Luo uusi varasto{% endblock %}
 
 {% block content %}
+<p class="page-description">
+    Täytä alla olevat tiedot luodaksesi uuden varaston. Varaston tilavuus määrittää kuinka paljon 
+    siihen mahtuu sisältöä, ja alkusaldo on varaston sisällön määrä luomishetkellä.
+</p>
+
 <form method="POST">
     <div class="form-group">
         <label for="nimi">Varaston nimi:</label>
         <input type="text" id="nimi" name="nimi" required placeholder="Esim. Mehuvarasto">
+        <p class="form-hint">Anna varastolle kuvaava nimi, joka auttaa tunnistamaan sen myöhemmin.</p>
     </div>
     <div class="form-group">
-        <label for="tilavuus">Tilavuus:</label>
-        <input type="number" id="tilavuus" name="tilavuus" step="0.1" min="0" required value="100" placeholder="Esim. 100">
+        <label for="tilavuus">Maksimitilavuus (yksikköä):</label>
+        <input type="number" id="tilavuus" name="tilavuus" step="0.1" min="0.1" required value="100" placeholder="Esim. 100">
+        <p class="form-hint">Määritä varaston suurin mahdollinen sisältömäärä.</p>
     </div>
     <div class="form-group">
-        <label for="alku_saldo">Alkusaldo:</label>
+        <label for="alku_saldo">Alkusaldo (yksikköä):</label>
         <input type="number" id="alku_saldo" name="alku_saldo" step="0.1" min="0" value="0" placeholder="Esim. 0">
+        <p class="form-hint">Jos varastossa on jo sisältöä, syötä se tähän. Muuten jätä nollaksi.</p>
     </div>
     <button type="submit" class="btn btn-success">Luo varasto</button>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary">Peruuta</a>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Peruuta ja palaa etusivulle</a>
 </form>
 {% endblock %}

@@ -1,32 +1,37 @@
 {% extends "base.html" %}
 
-{% block title %}Varastot - Varastosovellus{% endblock %}
-{% block header %}Varastot{% endblock %}
+{% block title %}Kaikki varastot - Varastonhallinta{% endblock %}
+{% block header %}Varastojen hallinta{% endblock %}
 
 {% block content %}
+<p class="page-description">
+    Tässä näet kaikki järjestelmään luodut varastot. Voit tarkastella yksittäisen varaston tietoja, 
+    muokata sen nimeä tai poistaa sen kokonaan. Palkki näyttää kuinka täynnä varasto on.
+</p>
+
 {% if varastot %}
     {% for varasto_id, data in varastot.items() %}
     <div class="varasto-card">
         <h3>{{ data.nimi }}</h3>
         <div class="varasto-info">
-            <p>Tilavuus: {{ data.varasto.tilavuus }}</p>
-            <p>Saldo: {{ data.varasto.saldo }}</p>
-            <p>Tilaa jäljellä: {{ data.varasto.paljonko_mahtuu() }}</p>
+            <p><strong>Maksimitilavuus:</strong> {{ data.varasto.tilavuus }} yksikköä</p>
+            <p><strong>Nykyinen saldo:</strong> {{ data.varasto.saldo }} yksikköä</p>
+            <p><strong>Vapaata tilaa:</strong> {{ data.varasto.paljonko_mahtuu() }} yksikköä</p>
         </div>
-        <div class="progress-bar">
+        <div class="progress-bar" title="Varaston täyttöaste">
             {% set fill_percent = (data.varasto.saldo / data.varasto.tilavuus * 100) if data.varasto.tilavuus > 0 else 0 %}
             <div class="progress-bar-fill" style="width: {{ fill_percent }}%"></div>
         </div>
         <div class="actions">
-            <a href="{{ url_for('nayta_varasto', varasto_id=varasto_id) }}" class="btn">Näytä</a>
-            <a href="{{ url_for('muokkaa_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary">Muokkaa</a>
+            <a href="{{ url_for('nayta_varasto', varasto_id=varasto_id) }}" class="btn" title="Avaa varaston tiedot ja hallitse sisältöä">Näytä tiedot</a>
+            <a href="{{ url_for('muokkaa_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary" title="Muokkaa varaston nimeä">Muokkaa nimeä</a>
             <form action="{{ url_for('poista_varasto', varasto_id=varasto_id) }}" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Haluatko varmasti poistaa tämän varaston?')">Poista</button>
+                <button type="submit" class="btn btn-danger" title="Poista varasto pysyvästi" onclick="return confirm('Haluatko varmasti poistaa varaston \"{{ data.nimi }}\"? Tätä toimintoa ei voi perua.')">Poista varasto</button>
             </form>
         </div>
     </div>
     {% endfor %}
 {% else %}
-    <p class="empty-message">Ei varastoja. Luo uusi varasto aloittaaksesi!</p>
+    <p class="empty-message">Ei vielä luotuja varastoja. Aloita klikkaamalla "Luo uusi varasto" -painiketta yläpuolella.</p>
 {% endif %}
 {% endblock %}

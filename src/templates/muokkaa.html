@@ -1,19 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}Muokkaa: {{ nimi }} - Varastosovellus{% endblock %}
-{% block header %}Muokkaa varastoa: {{ nimi }}{% endblock %}
+{% block title %}Muokkaa varastoa: {{ nimi }} - Varastonhallinta{% endblock %}
+{% block header %}Muokkaa varaston tietoja{% endblock %}
 
 {% block content %}
+<p class="page-description">
+    Täällä voit muokata varaston "{{ nimi }}" nimeä. Huomaa, että tilavuutta ei voi muuttaa 
+    jälkikäteen turvallisuussyistä.
+</p>
+
 <form method="POST">
     <div class="form-group">
-        <label for="nimi">Varaston nimi:</label>
+        <label for="nimi">Varaston uusi nimi:</label>
         <input type="text" id="nimi" name="nimi" required value="{{ nimi }}">
+        <p class="form-hint">Syötä varastolle uusi nimi tai säilytä nykyinen.</p>
     </div>
     <div class="varasto-info">
-        <p><strong>Tilavuus:</strong> {{ varasto.tilavuus }} (ei muokattavissa)</p>
-        <p><strong>Nykyinen saldo:</strong> {{ varasto.saldo }}</p>
+        <p><strong>Maksimitilavuus:</strong> {{ varasto.tilavuus }} yksikköä (ei muokattavissa)</p>
+        <p><strong>Nykyinen saldo:</strong> {{ varasto.saldo }} yksikköä</p>
     </div>
-    <button type="submit" class="btn btn-success">Tallenna</button>
-    <a href="{{ url_for('nayta_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary">Peruuta</a>
+    <button type="submit" class="btn btn-success">Tallenna muutokset</button>
+    <a href="{{ url_for('nayta_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary">Peruuta ja palaa varastoon</a>
 </form>
 {% endblock %}

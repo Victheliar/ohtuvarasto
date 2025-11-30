@@ -1,36 +1,42 @@
 {% extends "base.html" %}
 
-{% block title %}{{ nimi }} - Varastosovellus{% endblock %}
-{% block header %}{{ nimi }}{% endblock %}
+{% block title %}{{ nimi }} - Varaston tiedot{% endblock %}
+{% block header %}Varasto: {{ nimi }}{% endblock %}
 
 {% block content %}
+<p class="page-description">
+    Tässä näet varaston "{{ nimi }}" yksityiskohtaiset tiedot. Voit lisätä tai ottaa sisältöä varastosta alla olevilla lomakkeilla.
+</p>
+
 <div class="varasto-info">
-    <p><strong>Tilavuus:</strong> {{ varasto.tilavuus }}</p>
-    <p><strong>Saldo:</strong> {{ varasto.saldo }}</p>
-    <p><strong>Tilaa jäljellä:</strong> {{ varasto.paljonko_mahtuu() }}</p>
+    <p><strong>Maksimitilavuus:</strong> {{ varasto.tilavuus }} yksikköä</p>
+    <p><strong>Nykyinen saldo:</strong> {{ varasto.saldo }} yksikköä</p>
+    <p><strong>Vapaata tilaa:</strong> {{ varasto.paljonko_mahtuu() }} yksikköä</p>
 </div>
 
-<div class="progress-bar">
+<div class="progress-bar" title="Varaston täyttöaste: {{ ((varasto.saldo / varasto.tilavuus * 100) if varasto.tilavuus > 0 else 0)|round(1) }}%">
     {% set fill_percent = (varasto.saldo / varasto.tilavuus * 100) if varasto.tilavuus > 0 else 0 %}
     <div class="progress-bar-fill" style="width: {{ fill_percent }}%"></div>
 </div>
 
-<h2>Lisää varastoon</h2>
+<h2>Lisää sisältöä varastoon</h2>
+<p class="section-description">Syötä lisättävä määrä ja paina "Lisää". Maksimissaan voit lisätä {{ varasto.paljonko_mahtuu() }} yksikköä.</p>
 <form action="{{ url_for('lisaa_varastoon', varasto_id=varasto_id) }}" method="POST" class="inline-form">
-    <input type="number" name="maara" step="0.1" min="0" required placeholder="Määrä">
-    <button type="submit" class="btn btn-success">Lisää</button>
+    <input type="number" name="maara" step="0.1" min="0.1" max="{{ varasto.paljonko_mahtuu() }}" required placeholder="Määrä">
+    <button type="submit" class="btn btn-success">Lisää varastoon</button>
 </form>
 
-<h2>Ota varastosta</h2>
+<h2>Ota sisältöä varastosta</h2>
+<p class="section-description">Syötä otettava määrä ja paina "Ota". Varastossa on tällä hetkellä {{ varasto.saldo }} yksikköä.</p>
 <form action="{{ url_for('ota_varastosta', varasto_id=varasto_id) }}" method="POST" class="inline-form">
-    <input type="number" name="maara" step="0.1" min="0" required placeholder="Määrä">
-    <button type="submit" class="btn">Ota</button>
+    <input type="number" name="maara" step="0.1" min="0.1" max="{{ varasto.saldo }}" required placeholder="Määrä">
+    <button type="submit" class="btn">Ota varastosta</button>
 </form>
 
 <div class="actions" style="margin-top: 30px;">
-    <a href="{{ url_for('muokkaa_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary">Muokkaa</a>
+    <a href="{{ url_for('muokkaa_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary" title="Muokkaa varaston nimeä">Muokkaa varaston nimeä</a>
     <form action="{{ url_for('poista_varasto', varasto_id=varasto_id) }}" method="POST" style="display: inline;">
-        <button type="submit" class="btn btn-danger" onclick="return confirm('Haluatko varmasti poistaa tämän varaston?')">Poista</button>
+        <button type="submit" class="btn btn-danger" title="Poista tämä varasto pysyvästi" onclick="return confirm('Haluatko varmasti poistaa varaston \"{{ nimi }}\"? Tätä toimintoa ei voi perua.')">Poista varasto kokonaan</button>
     </form>
 </div>
 {% endblock %}

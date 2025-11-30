@@ -22,7 +22,7 @@ class TestApp(unittest.TestCase):
     def test_index_page(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Varastot', response.data)
+        self.assertIn(b'Varastojen hallinta', response.data)
 
     def test_luo_varasto_get(self):
         response = self.client.get('/luo')
@@ -55,7 +55,7 @@ class TestApp(unittest.TestCase):
         response = self.client.get('/varasto/999', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
         # Should redirect to index
-        self.assertIn(b'Varastot', response.data)
+        self.assertIn(b'Varastojen hallinta', response.data)
 
     def test_muokkaa_varasto_get(self):
         # Create a warehouse first
@@ -147,7 +147,7 @@ class TestApp(unittest.TestCase):
     def test_empty_index(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Ei varastoja', response.data)
+        self.assertIn(b'Ei viel', response.data)  # "Ei vielä luotuja varastoja"
 
     def test_luo_varasto_invalid_tilavuus(self):
         response = self.client.post('/luo', data={
