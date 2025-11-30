@@ -148,3 +148,28 @@ class TestApp(unittest.TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Ei varastoja', response.data)
+
+    def test_luo_varasto_invalid_tilavuus(self):
+        response = self.client.post('/luo', data={
+            'nimi': 'Testivarasto',
+            'tilavuus': 'invalid',
+            'alku_saldo': '50'
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        # Should use default value of 100
+        varasto_id = list(varastot.keys())[0]
+        self.assertEqual(varastot[varasto_id]['varasto'].tilavuus, 100)
+
+    def test_lisaa_varastoon_invalid_maara(self):
+        self.client.post('/luo', data={
+            'nimi': 'Testivarasto',
+            'tilavuus': '100',
+            'alku_saldo': '0'
+        })
+        varasto_id = list(varastot.keys())[0]
+        response = self.client.post(f'/varasto/{varasto_id}/lisaa', data={
+            'maara': 'invalid'
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        # Should use default value of 0
+        self.assertEqual(varastot[varasto_id]['varasto'].saldo, 0)

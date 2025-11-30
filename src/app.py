@@ -13,6 +13,14 @@ def get_next_id():
     return id_counter[0]
 
 
+def safe_float(value, default=0.0):
+    """Safely convert a value to float, returning default if invalid."""
+    try:
+        return float(value) if value else default
+    except (ValueError, TypeError):
+        return default
+
+
 @app.route('/')
 def index():
     return render_template('index.html', varastot=varastot)
@@ -22,8 +30,8 @@ def index():
 def luo_varasto():
     if request.method == 'POST':
         nimi = request.form.get('nimi', 'Nimetön varasto')
-        tilavuus = float(request.form.get('tilavuus', 100))
-        alku_saldo = float(request.form.get('alku_saldo', 0))
+        tilavuus = safe_float(request.form.get('tilavuus'), 100)
+        alku_saldo = safe_float(request.form.get('alku_saldo'), 0)
 
         varasto_id = get_next_id()
         varastot[varasto_id] = {
@@ -70,7 +78,7 @@ def lisaa_varastoon(varasto_id):
     if varasto_id not in varastot:
         return redirect(url_for('index'))
 
-    maara = float(request.form.get('maara', 0))
+    maara = safe_float(request.form.get('maara'), 0)
     varastot[varasto_id]['varasto'].lisaa_varastoon(maara)
     return redirect(url_for('nayta_varasto', varasto_id=varasto_id))
 
@@ -80,7 +88,7 @@ def ota_varastosta(varasto_id):
     if varasto_id not in varastot:
         return redirect(url_for('index'))
 
-    maara = float(request.form.get('maara', 0))
+    maara = safe_float(request.form.get('maara'), 0)
     varastot[varasto_id]['varasto'].ota_varastosta(maara)
     return redirect(url_for('nayta_varasto', varasto_id=varasto_id))
 
@@ -93,4 +101,4 @@ def poista_varasto(varasto_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
