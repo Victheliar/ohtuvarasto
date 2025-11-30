@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ nimi }} - Varastosovellus{% endblock %}
+{% block header %}{{ nimi }}{% endblock %}
+
+{% block content %}
+<div class="varasto-info">
+    <p><strong>Tilavuus:</strong> {{ varasto.tilavuus }}</p>
+    <p><strong>Saldo:</strong> {{ varasto.saldo }}</p>
+    <p><strong>Tilaa jäljellä:</strong> {{ varasto.paljonko_mahtuu() }}</p>
+</div>
+
+<div class="progress-bar">
+    {% set fill_percent = (varasto.saldo / varasto.tilavuus * 100) if varasto.tilavuus > 0 else 0 %}
+    <div class="progress-bar-fill" style="width: {{ fill_percent }}%"></div>
+</div>
+
+<h2>Lisää varastoon</h2>
+<form action="{{ url_for('lisaa_varastoon', varasto_id=varasto_id) }}" method="POST" class="inline-form">
+    <input type="number" name="maara" step="0.1" min="0" required placeholder="Määrä">
+    <button type="submit" class="btn btn-success">Lisää</button>
+</form>
+
+<h2>Ota varastosta</h2>
+<form action="{{ url_for('ota_varastosta', varasto_id=varasto_id) }}" method="POST" class="inline-form">
+    <input type="number" name="maara" step="0.1" min="0" required placeholder="Määrä">
+    <button type="submit" class="btn">Ota</button>
+</form>
+
+<div class="actions" style="margin-top: 30px;">
+    <a href="{{ url_for('muokkaa_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary">Muokkaa</a>
+    <form action="{{ url_for('poista_varasto', varasto_id=varasto_id) }}" method="POST" style="display: inline;">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Haluatko varmasti poistaa tämän varaston?')">Poista</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Muokkaa: {{ nimi }} - Varastosovellus{% endblock %}
+{% block header %}Muokkaa varastoa: {{ nimi }}{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <div class="form-group">
+        <label for="nimi">Varaston nimi:</label>
+        <input type="text" id="nimi" name="nimi" required value="{{ nimi }}">
+    </div>
+    <div class="varasto-info">
+        <p><strong>Tilavuus:</strong> {{ varasto.tilavuus }} (ei muokattavissa)</p>
+        <p><strong>Nykyinen saldo:</strong> {{ varasto.saldo }}</p>
+    </div>
+    <button type="submit" class="btn btn-success">Tallenna</button>
+    <a href="{{ url_for('nayta_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary">Peruuta</a>
+</form>
+{% endblock %}

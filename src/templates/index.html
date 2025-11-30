@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Varastot - Varastosovellus{% endblock %}
+{% block header %}Varastot{% endblock %}
+
+{% block content %}
+{% if varastot %}
+    {% for varasto_id, data in varastot.items() %}
+    <div class="varasto-card">
+        <h3>{{ data.nimi }}</h3>
+        <div class="varasto-info">
+            <p>Tilavuus: {{ data.varasto.tilavuus }}</p>
+            <p>Saldo: {{ data.varasto.saldo }}</p>
+            <p>Tilaa jäljellä: {{ data.varasto.paljonko_mahtuu() }}</p>
+        </div>
+        <div class="progress-bar">
+            {% set fill_percent = (data.varasto.saldo / data.varasto.tilavuus * 100) if data.varasto.tilavuus > 0 else 0 %}
+            <div class="progress-bar-fill" style="width: {{ fill_percent }}%"></div>
+        </div>
+        <div class="actions">
+            <a href="{{ url_for('nayta_varasto', varasto_id=varasto_id) }}" class="btn">Näytä</a>
+            <a href="{{ url_for('muokkaa_varasto', varasto_id=varasto_id) }}" class="btn btn-secondary">Muokkaa</a>
+            <form action="{{ url_for('poista_varasto', varasto_id=varasto_id) }}" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Haluatko varmasti poistaa tämän varaston?')">Poista</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <p class="empty-message">Ei varastoja. Luo uusi varasto aloittaaksesi!</p>
+{% endif %}
+{% endblock %}
